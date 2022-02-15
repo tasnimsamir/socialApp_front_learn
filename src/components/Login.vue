@@ -68,7 +68,7 @@
 
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions,mapGetters } from "vuex";
 export default { 
   name: "login",
   components: {},
@@ -88,8 +88,12 @@ export default {
       showError: false
     };
   },
+  computed:{
+    ...mapGetters({userid:"StateUserId",userapprovaldetails:"StateUserApproval"}), 
+  },
 
   methods: {
+    
     ...mapActions(["LogIn"]),
     async submit() {
       const User = new FormData();
@@ -97,8 +101,17 @@ export default {
       User.append("password", this.form.password);
       try {
           await this.LogIn(User);
-          console.log('inside login vue');
-          this.$router.push("/posts");
+          // console.log('inside login vue',this.userapprovaldetails.is_accepted);
+          if(this.userapprovaldetails.is_accepted===0){
+            this.$router.push("/wait");
+          }
+          else if (this.userapprovaldetails.is_accepted===-1) {
+            this.$router.push("/wait");
+          } 
+          else {
+            this.$router.push("/posts");
+          }
+          // this.$router.push("/posts");
           this.showError = false
       } catch (error) {
         this.showError = true

@@ -2,6 +2,7 @@ import axios from "axios";
 
 const state = {
   email: null,
+  // admin_mail : 'tasnimsamir71@gmail.com',
   user_id: null,
   access_token:null,
   user:{'name':'',
@@ -9,13 +10,22 @@ const state = {
         'zipcode':'',
         'birthdate': '',
         'gender':'',
-        'friends':null}
+        'is_staff':'',
+        'friends':null,},
+  
+  UserApproval:{
+    'is_accepted':null,
+    'is_accepted_message':null,
+  }
+
   
 }
 
 const getters = {
+  isAuthorized: (state) => !!state.user.is_staff,
   isAuthenticated: (state) => !!state.email,
   StateUser: (state) => state.user,
+  StateUserApproval: (state) => state.UserApproval,
   StateUserEmail: (state) => state.email,
   StateUserId: (state) => state.user_id,
   StateUsertoken: (state) => state.access_token,
@@ -31,17 +41,15 @@ const actions = {
 
   async LogIn({commit,dispatch}, user) {
     let response = await axios.post("signin", user)
-    // console.log('Done!')
     await commit('setUser', {'email':user.get('email'),"token":response.data.token,'userid':response.data.id})
-    // console.log('Done!')
-    return await dispatch("GetAccount",this.getters.StateUserId);
-    
+    return await dispatch("GetAccount",this.getters.StateUserId); 
   },
 
   async GetAccount({ commit },userid) {
     const response = await axios.get(`accounts/${userid}/`);
     // console.log('Inside Get Account',response.data)
     commit("setuserDetails", response.data);
+    commit("setuserApprovalDetails", response.data);
   },
 
 
@@ -62,8 +70,20 @@ const mutations = {
     Object.keys(state.user).forEach(key => {
       state.user[key] = user[key];
     });
-    // console.log('Inside setUserDetails',state.user)
+    // console.log('Inside setUserDetails',this.getters.StateUser)
   },
+  setuserApprovalDetails(state,user){
+    Object.keys(state.UserApproval).forEach(key => {
+      state.UserApproval[key] = user[key];
+    });
+    // console.log('Inside setuserApprovalDetails',this.getters.StateUserApproval)
+  },
+  // setupdateApprovalDetails(state,user){
+  //   Object.keys(state.UserApproval).forEach(key => {
+  //     state.UserApproval[key] = user[key];
+  //   });
+  //   // console.log('Inside setuserApprovalDetails',this.getters.StateUserApproval)
+  // },
 
   logout(state) {
     state.email = null
@@ -72,6 +92,8 @@ const mutations = {
     // state.likes = null
     state.access_token = null
     state.user_id = null
+    // state.user = {}
+    // state.UserApproval = {}
   },
 };
 

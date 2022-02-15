@@ -91,7 +91,7 @@
       </v-menu>
 
       <v-btn icon >
-        <v-icon style="color: white;">mdi-dots-vertical</v-icon>
+        <v-icon style="color: white;" @click="logout()">mdi-lock</v-icon>
       </v-btn>
 
 </v-layout>
@@ -158,6 +158,10 @@ import { mapGetters, mapActions } from "vuex";
         throw "Sorry you can't accept the friend request now!"
       }
     }, 
+    async logout (){
+        await this.$store.dispatch('LogOut')
+        this.$router.push('/login')
+      },
   }
   }
 </script>

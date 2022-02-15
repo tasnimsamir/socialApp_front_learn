@@ -10,10 +10,15 @@
       </v-col>
       <v-col>
           <router-link class="mx-2" style="color:white;font-weight:bold" to="/">Home</router-link>|
-          <span v-if="isLoggedIn">
+          <span v-if="isLoggedIn && !isStaff">
             <router-link class="mx-2" style="color:white;font-weight:bold" to="/posts">Posts</router-link>|
-            <router-link class="mx-2" style="color:white;font-weight:bold" to="/myprofile/">My Profile</router-link>|
-            <a class="mx-2" style="color:white;font-weight:bold"  @click="logout">Logout</a>
+            <router-link class="mx-2" style="color:white;font-weight:bold" to="/myprofile/">My Profile</router-link>
+            <!-- <a class="mx-2" style="color:white;font-weight:bold"  @click="logout">Logout</a> -->
+          </span>
+          <span v-else-if="isLoggedIn && isStaff">
+            <router-link class="mx-2" style="color:white;font-weight:bold" to="/posts">Posts</router-link>|
+            <router-link class="mx-2" style="color:white;font-weight:bold" to="/admin/">My Profile</router-link>
+            <!-- <a class="mx-2" style="color:white;font-weight:bold"  @click="logout">Logout</a> -->
           </span>
           <span v-else>
             <router-link class="mx-2" style="color:white;font-weight:bold" to="/register">Register</router-link>|
@@ -54,8 +59,6 @@
       </v-layout>
     </v-footer>
   </v-app>
-
-
 </template>
 
 
@@ -74,7 +77,8 @@ export default {
     }
   },
   computed : {
-      isLoggedIn : function(){ return this.$store.getters.isAuthenticated}
+      isLoggedIn : function(){ return this.$store.getters.isAuthenticated},
+      isStaff : function(){ return this.$store.getters.isAuthorized}
     },
 
   methods: {

@@ -11,6 +11,7 @@ import myProfile from '@/components/myProfile'
 import Friends from '@/components/myfriends'
 import profiles from '@/components/profiles'
 import profilefriends from '@/components/profilefriends'
+import adminpanel from '@/components/adminPanel'
 import store from "@/store";
 
 
@@ -79,6 +80,12 @@ const routes = [
     component: profiles,
     meta: {requiresAuth: true},
   },
+  {
+    path: '/admin/',
+    name: "admin",
+    component: adminpanel,
+    meta: {requiresAuthorized: true},
+  },
 
 ]
 
@@ -88,6 +95,20 @@ const router = new VueRouter({
   routes
 })
 
+//Requires Authorization (to be admin)
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuthorized)) {
+    if (store.getters.isAuthorized) {
+      next();
+      return;
+    }
+    next("/admin/");
+  } else {
+    next();
+  }
+});
+
+//Requires Authentication (to be registered)
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (store.getters.isAuthenticated) {
@@ -100,6 +121,7 @@ router.beforeEach((to, from, next) => {
   }
 });
 
+//Guest
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.guest)) {
     if (store.getters.isAuthenticated) {
