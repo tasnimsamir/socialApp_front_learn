@@ -126,13 +126,53 @@ export default {
       dialogDelete: false,
       headers:[],
       editedIndex: -1,
+      editedItem:{
+        'Date_of_Birth': null,
+        'email': null,
+        'friends': null,
+        'gender': null,
+        'id': null,
+        'is_accepted': null,
+        'is_accepted_message': null,
+        'is_active': null,
+        'is_admin': null,
+        'is_staff': null,
+        'is_super_teacher': null,
+        'is_superuser': null,
+        'is_teacher': null,
+        'last_login': null,
+        'name': null,
+        'password': null,
+        'username': null,
+        'zipcode': null,
+        'length': 0},
+    defaultItem:{
+        'Date_of_Birth': null,
+        'email': null,
+        'friends': null,
+        'gender': null,
+        'id': null,
+        'is_accepted': null,
+        'is_accepted_message': null,
+        'is_active': null,
+        'is_admin': null,
+        'is_staff': null,
+        'is_super_teacher': null,
+        'is_superuser': null,
+        'is_teacher': null,
+        'last_login': null,
+        'name': null,
+        'password': null,
+        'username': null,
+        'zipcode': null,
+        'length': 0}
       }},
  
   created: function () {
     this.$store.dispatch("GetallAccounts");
-    console.log('Inside Create Admin panel', Object.keys(this.accounts[0]))
+    // console.log('Inside Create Admin panel', Object.keys(this.accounts[0]))
     this.getHeaders()
-    console.log('Edited Items:',this.headers)
+    // console.log('Edited Items:',this.headers)
   },
 
   computed: {
@@ -141,22 +181,24 @@ export default {
         return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
       },
 
-    editedItem(){
-        let dict = [];
-        var a = Object.keys(this.accounts[0])
-        for (let i=0; i < a.length; i++){
-            dict[a[i]] = null
-        }
-        return dict
-    },
-    defaultItem(){
-        let dict = [];
-        var a = Object.keys(this.accounts[0])
-        for (let i=0; i < a.length; i++){
-            dict[a[i]] = null
-        }
-        return dict
-    },
+    // editedItem(){
+    //     let dict = [];
+    //     var a = Object.keys(this.accounts[0])
+    //     for (let i=0; i < a.length; i++){
+    //         dict[a[i]] = null
+    //     }
+    //     console.log(dict)
+    //     return dict
+    // },
+    // defaultItem(){
+    //     let dict = [];
+    //     var a = Object.keys(this.accounts[0])
+    //     for (let i=0; i < a.length; i++){
+    //         dict[a[i]] = null
+    //     }
+    //     return dict
+       
+    // },
   
   },
   watch: {
@@ -169,7 +211,7 @@ export default {
     },
 
   methods: {
-    ...mapActions(["GetallAccounts"]),
+    ...mapActions(["GetallAccounts" , 'AcceptAccountOrNot' , "deleteAccount"]),
     getHeaders(){
         var a = Object.keys(this.accounts[0])
         a.forEach((entry) => {
@@ -182,46 +224,58 @@ export default {
     },
     editItem (item) {
         this.editedIndex = this.accounts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
+        //assign: copies all enumerable own properties from one or more source objects to a target object. It returns the modified target object.
+        this.editedItem = Object.assign(this.accounts[this.editedIndex], item)
         this.dialog = true
         },
 
-      deleteItem (item) {
-        this.editedIndex = this.accounts.indexOf(item)
-        this.editedItem = Object.assign({}, item)
-        this.dialogDelete = true
-      },
-
-      deleteItemConfirm () {
-        this.accounts.splice(this.editedIndex, 1)
-        this.closeDelete()
-      },
-
-      close () {
-        this.dialog = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-      closeDelete () {
-        this.dialogDelete = false
-        this.$nextTick(() => {
-          this.editedItem = Object.assign({}, this.defaultItem)
-          this.editedIndex = -1
-        })
-      },
-
-      save () {
-        if (this.editedIndex > -1) {
-          Object.assign(this.accounts[this.editedIndex], this.editedItem)
-        } else {
-          this.desserts.push(this.editedItem)
-        }
-        this.close()
-      },
+    deleteItem (item) {
+      this.editedIndex = this.accounts.indexOf(item)
+      this.editedItem = Object.assign(this.accounts[this.editedIndex], item)
+      this.dialogDelete = true
     },
+
+    deleteItemConfirm () {
+      this.deleteAccount(this.accounts[this.editedIndex].id )// +1 : because userids start from 1 while java counter starts from 0
+      this.accounts.splice(this.editedIndex, 1)
+      this.closeDelete()
+    },
+
+    close () {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    closeDelete () {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.editedIndex = -1
+      })
+    },
+
+    save () {
+      if (this.editedIndex > -1) {// EDIT ITEM
+        try {
+        //   console.log('============',this.accounts[this.editedIndex].id)
+          // approvaldetails: [to edit account detail , is_accepted , is_accepted_message]
+          let approvaldetails = [this.accounts[this.editedIndex].id , this.editedItem.is_accepted , this.editedItem.is_accepted_message]
+          this.AcceptAccountOrNot(approvaldetails);
+        //   Object.assign(this.editedItem , this.accounts[this.editedIndex]) 
+        //   console.log(this.editedItem)
+      } catch (error) {
+          throw "Sorry you can't edit approval msg now!"
+      }
+
+      } else {//ADD NEW ITEM
+        // this.accounts.push(this.editedItem)
+      }
+      this.close()
+    },
+  },
   };
 
 </script>

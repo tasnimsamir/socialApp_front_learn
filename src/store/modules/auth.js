@@ -2,7 +2,6 @@ import axios from "axios";
 
 const state = {
   email: null,
-  // admin_mail : 'tasnimsamir71@gmail.com',
   user_id: null,
   access_token:null,
   user:{'name':'',
@@ -45,14 +44,24 @@ const actions = {
     return await dispatch("GetAccount",this.getters.StateUserId); 
   },
 
+  async AcceptAccountOrNot({ dispatch },approval) { // approval: [to edit account detail , is_accepted , is_accepted_message]
+    let userid = approval[0]
+    await axios.put(`account/${userid}/`,{is_accepted:approval[1] , is_accepted_message:approval[2]},
+                    {headers:{ Authorization: `token ${this.getters.StateUsertoken}`}});
+    return await dispatch("GetAccount",userid);
+    
+  },
+
+  async deleteAccount({},userid) {
+    await axios.delete(`account/${userid}/`,{data:{},headers:{ Authorization: `token ${this.getters.StateUsertoken}`}});
+  },
+
   async GetAccount({ commit },userid) {
     const response = await axios.get(`accounts/${userid}/`);
     // console.log('Inside Get Account',response.data)
     commit("setuserDetails", response.data);
     commit("setuserApprovalDetails", response.data);
   },
-
-
 
   async LogOut({ commit }) {
     commit("logout");
@@ -78,18 +87,9 @@ const mutations = {
     });
     // console.log('Inside setuserApprovalDetails',this.getters.StateUserApproval)
   },
-  // setupdateApprovalDetails(state,user){
-  //   Object.keys(state.UserApproval).forEach(key => {
-  //     state.UserApproval[key] = user[key];
-  //   });
-  //   // console.log('Inside setuserApprovalDetails',this.getters.StateUserApproval)
-  // },
 
   logout(state) {
     state.email = null
-    // state.posts = null
-    // state.comments = null
-    // state.likes = null
     state.access_token = null
     state.user_id = null
     // state.user = {}

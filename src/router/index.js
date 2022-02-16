@@ -2,16 +2,17 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/components/Home.vue'
-import register from '@/components/register'
-import login from '@/components/Login'
+import register from '@/components/auth/register'
+import login from '@/components/auth/Login'
 import posts from '@/components/posts'
-import wait from '@/components/wait'
+import wait from '@/components/auth/wait'
 import postdetails from '@/components/PostDetails'
 import myProfile from '@/components/myProfile'
 import Friends from '@/components/myfriends'
 import profiles from '@/components/profiles'
 import profilefriends from '@/components/profilefriends'
-import adminpanel from '@/components/adminPanel'
+import adminpanel from '@/components/admin/adminPanel'
+import accounts from '@/components/admin/accounts'
 import store from "@/store";
 
 
@@ -86,6 +87,12 @@ const routes = [
     component: adminpanel,
     meta: {requiresAuthorized: true},
   },
+  {
+    path: '/admin/accounts',
+    name: "adminaccounts",
+    component: accounts,
+    meta: {requiresAuthorized: true},
+  },
 
 ]
 
@@ -96,17 +103,17 @@ const router = new VueRouter({
 })
 
 //Requires Authorization (to be admin)
-router.beforeEach((to, from, next) => {
-  if (to.matched.some((record) => record.meta.requiresAuthorized)) {
-    if (store.getters.isAuthorized) {
-      next();
-      return;
-    }
-    next("/admin/");
-  } else {
-    next();
-  }
-});
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some((record) => record.meta.requiresAuthorized)) {
+//     if (store.getters.isAuthorized) {
+//       next();
+//       return;
+//     }
+//     next("/admin/");
+//   } else {
+//     next();
+//   }
+// });
 
 //Requires Authentication (to be registered)
 router.beforeEach((to, from, next) => {
