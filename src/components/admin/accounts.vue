@@ -170,6 +170,7 @@ export default {
  
   created: function () {
     this.$store.dispatch("GetallAccounts");
+    // console.log('==============',this.accounts)
     // console.log('Inside Create Admin panel', Object.keys(this.accounts[0]))
     this.getHeaders()
     // console.log('Edited Items:',this.headers)

@@ -5,15 +5,6 @@ const state = {
   comments: null,
   likes : null,
   postaccount:null,
-  // postusername:null,
-  // post_details: {
-  //   id:'',
-  //   body:'',
-  //   created:'',
-  //   owner:'',
-  //   comments:'',
-  //   likes:'',
-  // }
   
 }
 

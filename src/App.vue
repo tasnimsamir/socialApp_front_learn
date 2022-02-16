@@ -2,22 +2,28 @@
 <v-app light>
   <!-- =================================NavBar===================================================== -->
   <v-app-bar fixed app light clipped-left color="primary" class="elevation-2">
-    <!-- <SideMenu/> -->
-    <v-app-bar-nav-icon @click="drawer = !drawer"  class="white--text"></v-app-bar-nav-icon>
+    <v-avatar color="dodgerblue">
+      <v-icon dark>
+        mdi-account-circle
+      </v-icon>
+    </v-avatar>
+    <!-- <v-avatar>
+      <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
+    </v-avatar> -->
     <v-row>
       <v-col cols=4>
-        <v-toolbar-title class="white--text">Social APP</v-toolbar-title>
+        <v-toolbar-title class="white--text" style="color:white;font-weight:bold">Social Website</v-toolbar-title>
       </v-col>
       <v-col>
           <router-link class="mx-2" style="color:white;font-weight:bold" to="/">Home</router-link>|
           <span v-if="isLoggedIn && !isStaff">
             <router-link class="mx-2" style="color:white;font-weight:bold" to="/posts">Posts</router-link>|
-            <router-link class="mx-2" style="color:white;font-weight:bold" to="/myprofile/">My Profile</router-link>
+            <router-link class="mx-2" style="color:white;font-weight:bold" to="/myprofile/">Profile</router-link>
             <!-- <a class="mx-2" style="color:white;font-weight:bold"  @click="logout">Logout</a> -->
           </span>
           <span v-else-if="isLoggedIn && isStaff">
             <router-link class="mx-2" style="color:white;font-weight:bold" to="/posts">Posts</router-link>|
-            <router-link class="mx-2" style="color:white;font-weight:bold" to="/admin/">My Profile</router-link>
+            <router-link class="mx-2" style="color:white;font-weight:bold" to="/admin/">Account</router-link>
             <!-- <a class="mx-2" style="color:white;font-weight:bold"  @click="logout">Logout</a> -->
           </span>
           <span v-else>
@@ -29,10 +35,6 @@
     <righticons v-if="isLoggedIn"></righticons>
     </v-row>
     
-
-      
-      
-
   </v-app-bar>
 
     <!-- =================================Main Content===================================================== -->
@@ -73,7 +75,7 @@ export default {
 
   data() {
     return {
-      // drawer:false,
+      drawer:false,
     }
   },
   computed : {
