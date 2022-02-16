@@ -2,14 +2,23 @@
   <v-data-table
     :headers="headers"
     :items="accounts"
+    :search="search"
     sort-by="id"
     class="elevation-1"
   >
     <template v-slot:top>
-      <v-toolbar
-        flat
-      >
+      <v-toolbar flat>
         <v-toolbar-title>Registered Accounts</v-toolbar-title>
+        
+        <v-spacer></v-spacer>
+        <v-text-field
+          v-model="search"
+          append-icon="mdi-magnify"
+          label="Search"
+          single-line
+          hide-details
+        ></v-text-field>
+
         <v-divider
           class="mx-4"
           inset
@@ -90,7 +99,6 @@
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon
         small
-        class="mr-2"
         @click="editItem(item)"
       >
         mdi-pencil
@@ -102,14 +110,6 @@
         mdi-delete
       </v-icon>
     </template>
-    <!-- <template v-slot:no-data>
-      <v-btn
-        color="primary"
-        @click="initialize"
-      >
-        Reset
-      </v-btn>
-    </template> -->
   </v-data-table>
 </template>
 
@@ -122,6 +122,7 @@ export default {
   },
   data() {
     return {
+      search: '',
       dialog: false,
       dialogDelete: false,
       headers:[],

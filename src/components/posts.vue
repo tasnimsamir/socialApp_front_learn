@@ -25,6 +25,7 @@
               <v-card class="my-3"  hover color="grey lighten-5">
                 <v-responsive >
                   <v-container fill-height fluid>
+                    
                     <v-layout>
                       <v-flex xs12 align-end d-flex class="pa-1">
                         <v-list-item>
@@ -99,9 +100,10 @@
                   </v-container>
                 </div>
                 <div v-else></div>  
-
+              
               </v-card>
             </div>
+            <v-pagination v-model="page" :length="3" circle></v-pagination>
           </v-flex>
   </v-layout>
 </template>
@@ -116,6 +118,7 @@ export default {
   },
   data() {
     return {
+       
       postbody: '',
       submitComment: false,
       commentbody:'',
