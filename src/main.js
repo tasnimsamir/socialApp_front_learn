@@ -7,6 +7,7 @@ import store from './store'
 import '@mdi/font/css/materialdesignicons.css'
 import axios from "axios";
 import VueApexCharts from 'vue-apexcharts'
+import Ads from 'vue-google-adsense'
 
 
 
@@ -17,6 +18,8 @@ axios.defaults.baseURL = "http://127.0.0.1:8000/";
 
 Vue.use(Vuetify)
 Vue.use(VueApexCharts);
+Vue.use(Ads.Adsense);
+Vue.use(require('vue-script2'));
 
 axios.interceptors.response.use(undefined, function (error) {
   if (error) {
@@ -32,6 +35,7 @@ axios.interceptors.response.use(undefined, function (error) {
 
 Vue.config.productionTip = false
 Vue.component("apexchart", VueApexCharts);
+
 
 /* eslint-disable no-new */
 new Vue({
